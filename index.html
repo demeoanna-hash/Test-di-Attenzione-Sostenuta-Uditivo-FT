@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>TAS-U /f–t/ – Test di Attenzione Uditiva (Doppio Target)</title>
+<style>
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 700px;
+  margin: 40px auto;
+  background: #f7f9ff;
+  padding: 20px;
+  line-height: 1.5;
+}
+#timer { font-size: 1.4rem; font-weight: bold; margin-top: 10px; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<h1>TAS-U /f–t/ – Test di Attenzione Uditiva (Doppio Target)</h1>
+
+<p>
+Ascolterai una sequenza di parole. Conta separatamente:
+</p>
+<ul>
+  <li><strong>le parole che iniziano con F-</strong></li>
+  <li><strong>le parole che iniziano con T-</strong></li>
+</ul>
+
+<p>Non puoi mettere in pausa, tornare indietro o riascoltare.</p>
+
+<div id="timer">Tempo: --:--</div>
+
+<audio id="audio" src="FT.mp3"></audio>
+
+<div id="end-message" class="hidden">
+  <h2>🏁 Il test è terminato.</h2>
+  <p>Torna al Google Moduli e inserisci i due numeri: totale parole con F- e totale parole con T-.</p>
+</div>
+
+<script>
+const audio = document.getElementById("audio");
+const timer = document.getElementById("timer");
+const endMessage = document.getElementById("end-message");
+
+// Impediamo controlli
+audio.controls = false;
+audio.setAttribute("controlsList", "nodownload noplaybackrate");
+audio.preload = "auto";
+
+// Avvio automatico
+audio.play();
+
+// Timer
+audio.onloadedmetadata = () => {
+  let dur = Math.floor(audio.duration);
+  
+  const countdown = setInterval(() => {
+    let min = Math.floor(dur / 60);
+    let sec = dur % 60;
+    timer.textContent = `Tempo: ${min}:${sec.toString().padStart(2,'0')}`;
+
+    dur--;
+    if (dur < 0) {
+      clearInterval(countdown);
+      timer.textContent = "Tempo: 0:00";
+    }
+  }, 1000);
+};
+
+// Fine test
+audio.onended = () => {
+  endMessage.classList.remove("hidden");
+};
+</script>
+
+</body>
+</html>
